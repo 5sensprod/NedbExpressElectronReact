@@ -8,8 +8,7 @@ function insertData(data, callback) {
       console.error("Erreur lors de l'insertion des données :", err)
       return callback(err)
     }
-    console.log('Données insérées :', newDoc)
-    callback(null, newDoc)
+    callback(null, newDoc) // Ne plus afficher les données insérées
   })
 }
 
@@ -21,8 +20,7 @@ function getAllData(callback) {
       console.error('Erreur lors de la récupération des données :', err)
       return callback(err)
     }
-    console.log('Données récupérées :', docs)
-    callback(null, docs)
+    callback(null, docs) // Ne plus afficher les données récupérées
   })
 }
 

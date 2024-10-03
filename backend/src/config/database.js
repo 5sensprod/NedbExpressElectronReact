@@ -9,7 +9,6 @@ function initializeDB() {
 
   const app = electron.app || electron.remote.app
   const userDataPath = app.getPath('userData')
-  console.log(`Initialisation de NeDB avec userDataPath: ${userDataPath}`)
 
   db = new Datastore({
     filename: path.join(userDataPath, 'database.db'),
@@ -21,11 +20,6 @@ function initializeDB() {
       console.error(
         'Erreur lors du chargement de la base de données NeDB :',
         err
-      )
-    } else {
-      console.log(
-        'Base de données NeDB chargée avec succès depuis',
-        path.join(userDataPath, 'database.db')
       )
     }
   })

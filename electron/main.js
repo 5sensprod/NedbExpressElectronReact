@@ -12,8 +12,6 @@ if (process.env.NODE_ENV === 'development') {
   app.setPath('userData', userDataPath)
 }
 
-console.log('Chemin userData dans Electron :', app.getPath('userData'))
-
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
