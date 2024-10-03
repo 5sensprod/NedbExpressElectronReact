@@ -1,20 +1,25 @@
+const cors = require('cors')
 const express = require('express')
 const dataRoutes = require('./routes/dataRoutes')
-const app = express()
-const port = process.env.PORT || 3001
 
-// Middleware pour parser les requêtes JSON
-app.use(express.json())
+const createExpressApp = () => {
+  const app = express()
 
-// Utilisation des routes
-app.use('/api', dataRoutes)
+  // Activer CORS pour permettre les requêtes depuis React
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
 
-// Route de base pour tester le serveur
-app.get('/', (req, res) => {
-  res.send('Welcome to the Express server with NeDB!')
-})
+  // Middleware pour parser les requêtes JSON
+  app.use(express.json())
 
-// Démarrage du serveur
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`)
-})
+  // Utilisation des routes
+  app.use('/api', dataRoutes)
+
+  // Route de base
+  app.get('/', (req, res) => {
+    res.send('Welcome to the Express server with NeDB!')
+  })
+
+  return app
+}
+
+module.exports = createExpressApp

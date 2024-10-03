@@ -1,24 +1,28 @@
-const db = require('../config/db')
+const { getDB } = require('../config/database')
 
-// Insérer une nouvelle donnée
+// Fonction pour insérer des données dans la base de données
 function insertData(data, callback) {
+  const db = getDB()
   db.insert(data, (err, newDoc) => {
     if (err) {
-      callback(err)
-    } else {
-      callback(null, newDoc)
+      console.error("Erreur lors de l'insertion des données :", err)
+      return callback(err)
     }
+    console.log('Données insérées :', newDoc)
+    callback(null, newDoc)
   })
 }
 
-// Récupérer toutes les données
+// Fonction pour récupérer toutes les données depuis la base de données
 function getAllData(callback) {
+  const db = getDB()
   db.find({}, (err, docs) => {
     if (err) {
-      callback(err)
-    } else {
-      callback(null, docs)
+      console.error('Erreur lors de la récupération des données :', err)
+      return callback(err)
     }
+    console.log('Données récupérées :', docs)
+    callback(null, docs)
   })
 }
 

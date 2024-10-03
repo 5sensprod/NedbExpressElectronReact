@@ -33,7 +33,7 @@ Make sure you have the following installed:
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/<your-username>/<your-repo-name>.git
+   git clone https://github.com/5sensprod/NedbExpressElectronReact.git
    ```
 
 2. Install dependencies for the whole project:
@@ -49,36 +49,19 @@ Make sure you have the following installed:
    npm install
    ```
 
-4. Install dependencies for the backend Express app:
-
-   ```bash
-   cd ../backend
-   npm install
-   ```
-
 ### Development
 
-#### Start the frontend (React) and Electron in development mode:
+Start both Electron and React in development mode:
 
 ```bash
 npm start
 ```
 
-- React will run on `http://localhost:3000`.
+- React will run on [http://localhost:3000](http://localhost:3000).
 - Electron will automatically open and load the React app.
+- The backend (Express) runs on [http://localhost:3001](http://localhost:3001).
 
-#### Start the backend (Express with NeDB) in development mode:
-
-In a separate terminal, start the backend server:
-
-```bash
-cd backend
-npm run dev
-```
-
-- The backend server will run on `http://localhost:3001`.
-
-#### Build the production version of the app:
+### Build
 
 To generate the production build of both the frontend and the Electron app, run:
 
@@ -88,27 +71,18 @@ npm run build
 
 The production-ready app will be available in the `dist/` folder.
 
-### Backend API
-
-The backend exposes the following API routes:
-
-- **POST** `/api/data` : Add new data to the NeDB database.
-  - Body: JSON `{ "name": "Test Item", "value": 42 }`
-  
-- **GET** `/api/data` : Retrieve all data stored in NeDB.
-
 ### Project Structure
 
-```
+```bash
 your-project/
-├── backend/                 # Express backend with NeDB
-│   ├── data/                # NeDB database files
-│   ├── src/
-│   │   ├── config/          # Database configuration
-│   │   ├── controllers/     # Business logic
-│   │   ├── models/          # NeDB models
-│   │   ├── routes/          # Express routes
-│   │   └── server.js        # Main entry point for the backend
+├── dist/                    # Electron build outputs (production)
+├── backend/                 # Express + NeDB backend
+│   ├── config/              # Database configuration
+│   │   └── database.js      # NeDB initialization
+│   ├── controllers/         # Business logic
+│   ├── models/              # NeDB models
+│   ├── routes/              # Express routes
+│   └── server.js            # Main entry point for the backend
 ├── electron/                # Electron main process files
 │   ├── main.js              # Electron main process entry point
 │   ├── preload.js           # Preload script for Electron
@@ -153,8 +127,9 @@ This project is licensed under the MIT License.
 
 ## Notes
 
-- **.gitignore**: The `.gitignore` file is located at the root of the project to manage all files and folders that should not be versioned across both the frontend and backend.
 - **Mono-repo**: This project follows a mono-repo structure, making it easier to manage both the Electron backend and React frontend together.
+- **Database**: The NeDB database is initialized in the `backend/src/config/database.js` file and referenced via `getDB()` in the models.
+- **CORS**: The backend includes CORS configuration to allow communication between the React frontend and Express backend during development.
 
 ---
 

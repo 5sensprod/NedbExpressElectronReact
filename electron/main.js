@@ -1,8 +1,18 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, session } = require('electron')
 const path = require('path')
+const createExpressApp = require('../backend/src/server')
+const { initializeDB } = require('../backend/src/config/database')
 
-// Vérification manuelle si on est en mode développement
-const isDev = process.env.NODE_ENV === 'development'
+// Définir userData avant toute autre opération
+if (process.env.NODE_ENV === 'development') {
+  const userDataPath = path.join(
+    app.getPath('appData'),
+    'electron-react-express-nedb-boilerplate'
+  )
+  app.setPath('userData', userDataPath)
+}
+
+console.log('Chemin userData dans Electron :', app.getPath('userData'))
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -16,27 +26,37 @@ function createWindow() {
     },
   })
 
-  if (isDev) {
-    // En mode développement, charger depuis le serveur React
+  if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL('http://localhost:3000')
   } else {
-    // En production, charger les fichiers compilés de React
     mainWindow.loadFile(path.join(__dirname, '../frontend/build/index.html'))
   }
 }
 
-app.whenReady().then(() => {
-  createWindow()
+function startExpress() {
+  const expressApp = createExpressApp()
+  const port = process.env.PORT || 3001
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
+  expressApp.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`)
   })
+}
+
+app.whenReady().then(() => {
+  session.defaultSession.clearCache()
+  initializeDB() // Initialiser la base de données
+  createWindow()
+  startExpress()
 })
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
+  }
+})
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
   }
 })
